@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Widget w;
     QMenuBar m_menubar(&w);
-
+// for test
         QMenu* m_file = new QMenu("&File");
         m_file->addAction("&New game",&w,SLOT(FNewGame()),Qt::Key_F2);
         m_file->addSeparator();
