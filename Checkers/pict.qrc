@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>board.jpg</file>
+        <file>dexin_damka2.gif</file>
+        <file>dexin2.gif</file>
+        <file>sev_damka2.gif</file>
+        <file>sev2.gif</file>
+        <file>board2.jpg</file>
+        <file>page_1.png</file>
+        <file>page_2.png</file>
+        <file>page_3.png</file>
+        <file>page_4.png</file>
+        <file>page_5.png</file>
+        <file>page_6.png</file>
+        <file>page_7.png</file>
+        <file>board3.jpg</file>
+    </qresource>
+</RCC>
