@@ -13,6 +13,7 @@
 #include<QStyle>
 #include<QStyleOption>
 #include <QColor>
+#include <QSound>
 
 Widget::Widget(QWidget *parent) :
      QWidget(parent)
@@ -238,7 +239,7 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
         sxmaci_type = hakarak_type;
     }else if(x1 > 9 || y1 > 9 || x1 < 2 || y1 < 2){
             sxmaci_type = hakarak_type;
-    }else if(qarer[a].get_damka() == true && !ptiutes){
+    }else if(qarer[a].get_damka() == true){
         Damkaov_qayl(sxmac_x,sxmac_y,x1,y1);
      }else if(sxmac_y - y1 == 1 && ((sxmaci_type  != Yellow && playercolor) || (sxmaci_type  != Black && !playercolor))){
         sxmaci_type = hakarak_type;
@@ -500,7 +501,24 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
 
     qarer[a].set_m_shexum_x(0);
     qarer[a].set_m_shexum_y(0);
+    int dexinkerac = 0;
+    int sevkerac = 0;
+    for(int k = 0;k < 24;k++){
+        if(qarer[k].get_type() == Kerac){
+            if(qarer[k].get_nkar() == dexin || qarer[k].get_nkar() == dexin_damka)dexinkerac++;
+            else sevkerac++;
+        }
+    }
+    if(dexinkerac == 12){
+        QMessageBox::information(this,tr("GAME OVER"),tr("Purple won!"));
+        FNewGame();
+    }
+    if(sevkerac == 12){
+        QMessageBox::information(this,tr("GAME OVER"),tr("Yellow won!"));
+        FNewGame();
+    }
     repaint();
+
 }
 bool Widget::Stugum(QString type){
          for(int i = 0;i < 24;i++){
@@ -544,9 +562,6 @@ bool Widget::Stugum1(coins temp){
 
        }
        return false;
-
-
-
 }
 void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
     int qanak; // hakarak guyneri qanake
@@ -565,6 +580,11 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             }
         }
         if(qanak == 0){
+            if(ptiutes){
+                 sxmaci_type = hakarak_type;
+                 QMessageBox::warning(this,tr("STOP"),tr("ptiutes!"));
+                 return;
+            }
             if(sxmaci_type == Yellow){
                 zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
                                     tarer[x2-2] + QString::number(10 - y2);
@@ -632,6 +652,11 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             }
         }
         if(qanak == 0){
+            if(ptiutes){
+                 sxmaci_type = hakarak_type;
+                 QMessageBox::warning(this,tr("STOP"),tr("ptiutes!"));
+                 return;
+            }
             if(sxmaci_type == Yellow){
                 zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
                                     tarer[x2-2] + QString::number(10 - y2);
@@ -699,6 +724,11 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             }
         }
         if(qanak == 0){
+            if(ptiutes){
+                 sxmaci_type = hakarak_type;
+                 QMessageBox::warning(this,tr("STOP"),tr("ptiutes!"));
+                 return;
+            }
             if(sxmaci_type == Yellow){
                 zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
                                     tarer[x2-2] + QString::number(10 - y2);
@@ -767,6 +797,11 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             }
         }
         if(qanak == 0){
+            if(ptiutes){
+                 sxmaci_type = hakarak_type;
+                 QMessageBox::warning(this,tr("STOP"),tr("ptiutes!"));
+                 return;
+            }
             if(sxmaci_type == Yellow){
                 zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
                                     tarer[x2-2] + QString::number(10 - y2);
@@ -829,44 +864,41 @@ bool Widget::Damkaov_utel(coins temp){
     for(int c = temp.get_x() - 1,b = temp.get_y() - 1;c - 1 > 2 && b - 1 > 2;c--,b--){
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c - 1][b - 1] == false && qarer[i].get_type() != temp.get_type()){
-                if(Dashter[c - 1][b - 1] == true){
-                    break;
-                }
                 return true;
             }
+        }
+        if(Dashter[c][b] == true){
+            break;
         }
     }
     for(int c = temp.get_x() + 1,b = temp.get_y() - 1;c + 1 < 9 && b - 1 > 2;c++,b--){
-
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c + 1][b - 1] == false && qarer[i].get_type() != temp.get_type()){
-                if(Dashter[c + 1][b - 1] == true){
-                    break;
-                }
                 return true;
             }
+        }
+        if(Dashter[c][b] == true){
+            break;
         }
     }
     for(int c = temp.get_x() - 1,b = temp.get_y() + 1;c - 1 > 2 && b + 1 < 9;c--,b++){
-
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c - 1][b + 1] == false && qarer[i].get_type() != temp.get_type()){
-                if(Dashter[c - 1][b + 1] == true){
-                    break;
-                }
                 return true;
             }
         }
+        if(Dashter[c][b] == true){
+            break;
+        }
     }
     for(int c = temp.get_x() + 1,b = temp.get_y() + 1;c + 1 < 9 && b + 1 < 9;c++,b++){
-
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c + 1][b + 1] == false && qarer[i].get_type() != temp.get_type()){
-                if(Dashter[c + 1][b + 1] == true){
-                    break;
-                }
                 return true;
             }
+        }
+        if(Dashter[c][b] == true){
+            break;
         }
     }
 return false;

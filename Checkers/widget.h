@@ -52,9 +52,9 @@ private:
     QPixmap* sev_damka;
     QPixmap* dexin_damka;
     QPixmap* board;
-    QPixmap* board3;
-    QString* zangvac;
-    QString* zangvac2;
+    QPixmap* board3;   //hetevi fone
+    QString* zangvac; //dexinneri qayleri zangvac
+    QString* zangvac2; //severi qayleri zangvac
     QString* tarer;
     int qayleriqanak;
     int qayleriqanak2;
