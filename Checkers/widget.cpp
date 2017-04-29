@@ -13,11 +13,13 @@
 #include<QStyle>
 #include<QStyleOption>
 #include <QColor>
+
 Widget::Widget(QWidget *parent) :
      QWidget(parent)
 {
     resize(950,600);
     //setMouseTracking(true);
+    setWindowIcon(QIcon(":/images.jpg"));
     dexin = new QPixmap(":/dexin2.gif");
     sev = new QPixmap(":/sev2.gif");
     sev_damka = new QPixmap(":/sev_damka2.gif");
@@ -236,12 +238,12 @@ void Widget::mouseReleaseEvent(QMouseEvent *event){
         sxmaci_type = hakarak_type;
     }else if(x1 > 9 || y1 > 9 || x1 < 2 || y1 < 2){
             sxmaci_type = hakarak_type;
-    }else if(sxmac_y - y1 == 1 && ((sxmaci_type  != Yellow && playercolor) || (sxmaci_type  != Black && !playercolor))){
+    }else if(qarer[a].get_damka() == true && !ptiutes){
+        Damkaov_qayl(sxmac_x,sxmac_y,x1,y1);
+     }else if(sxmac_y - y1 == 1 && ((sxmaci_type  != Yellow && playercolor) || (sxmaci_type  != Black && !playercolor))){
         sxmaci_type = hakarak_type;
     }else if(sxmac_y - y1 == -1 && ((sxmaci_type  != Black && playercolor) || (sxmaci_type  != Yellow && !playercolor))){
         sxmaci_type = hakarak_type;
-    }else if(qarer[a].get_damka() == true){
-       Damkaov_qayl(sxmac_x,sxmac_y,x1,y1);
     }
     else if(sxmac_y - y1 == 2 && sxmac_x - x1 == 2){
         for(i = 0;i < 24;i++){
@@ -547,40 +549,47 @@ bool Widget::Stugum1(coins temp){
 
 }
 void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
-
-    if(sxmaci_type == Yellow){
-        qDebug() << "Yellow";
-    }else{
-        qDebug() << "Black";
-    }
     int qanak; // hakarak guyneri qanake
     int p1;
     if(x1 - x2 == y1 - y2 && x1 - x2 > 0){
-    qDebug() << "1";
         qanak = 0;
         for(int i = x1 - 1,j = y1 - 1;i != x2 && j != y2;i--,j--){
-                        qDebug() << "11";
             for(int p = 0;p < 24;p++){
                if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() != hakarak_type){
-                   QMessageBox::warning(this,tr("STOP"),tr("չես կարա14!"));
                    sxmaci_type = hakarak_type;
-                   break;
+                   return;
                }else if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() == hakarak_type){
                    qanak++;
                    p1 = p;
+                }
             }
         }
         if(qanak == 0){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
                 qarer[a].set_x(x2);
                 qarer[a].set_y(y2);
                 Dashter[x1][y1] = false;
                 Dashter[x2][y2] = true;
                 Stugum(hakarak_type);
                 //QSound::play("C:\Users\Ashot\Desktop\prof_shashki\qayl1.wav");
-        }else if(qanak > 1){
-            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
-            sxmaci_type = hakarak_type;
-        }else{
+        }else if (qanak == 1){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
             Dashter[x1][y1] = false;
             Dashter[x2][y2] = true;
             qarer[p1].set_type(Kerac);
@@ -592,40 +601,62 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             ptiutes = false;
             m_ptixaxas = false;
             if(Damkaov_utel(qarer[a])){
+                if(sxmaci_type == Yellow){
+                    zangvac2[qayleriqanak2] = " ";
+                    qayleriqanak2++;
+                }else {
+                    zangvac[qayleriqanak] = " ";
+                    qayleriqanak++;
+                }
                 ptiutes = true;
                 m_ptixaxas = true;
                 ptixaxas = qarer[a];
                 sxmaci_type = hakarak_type;
             }
             //QSound::play("C:\\Users\\ashot\\Documents\\Projects\\My projects\\shashki\\qayl1.wav");
-         }
-      }
+         }else{
+            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
+            sxmaci_type = hakarak_type;
+        }
     }else if(x1 - x2 == y1 - y2 && x1 - x2 < 0){
-        qDebug() << "2";
         qanak = 0;
         for(int i = x1 + 1,j = y1 + 1;i != x2 && j != y2;i++,j++){
-                        qDebug() << "22";
             for(int p = 0;p < 24;p++){
                if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() != hakarak_type){
-                   QMessageBox::warning(this,tr("STOP"),tr("չես կարա14!"));
                    sxmaci_type = hakarak_type;
-                   break;
+                   return;
                }else if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() == hakarak_type){
                    qanak++;
                    p1 = p;
+                }
             }
         }
         if(qanak == 0){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
                 qarer[a].set_x(x2);
                 qarer[a].set_y(y2);
                 Dashter[x1][y1] = false;
                 Dashter[x2][y2] = true;
                 Stugum(hakarak_type);
                 //QSound::play("C:\Users\Ashot\Desktop\prof_shashki\qayl1.wav");
-        }else if(qanak > 1){
-            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
-            sxmaci_type = hakarak_type;
-        }else{
+        }else if(qanak == 1){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
             Dashter[x1][y1] = false;
             Dashter[x2][y2] = true;
             qarer[p1].set_type(Kerac);
@@ -637,40 +668,62 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             ptiutes = false;
             m_ptixaxas = false;
             if(Damkaov_utel(qarer[a])){
+                if(sxmaci_type == Yellow){
+                    zangvac2[qayleriqanak2] = " ";
+                    qayleriqanak2++;
+                }else {
+                    zangvac[qayleriqanak] = " ";
+                    qayleriqanak++;
+                }
                 ptiutes = true;
                 m_ptixaxas = true;
                 ptixaxas = qarer[a];
                 sxmaci_type = hakarak_type;
             }
             //QSound::play("C:\\Users\\ashot\\Documents\\Projects\\My projects\\shashki\\qayl1.wav");
-         }
-      }
+         }else{
+            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
+            sxmaci_type = hakarak_type;
+        }
     }else if(x1 - x2 == y2 - y1 && x1 - x2 > 0){
-        qDebug() << "3";
         qanak = 0;
         for(int i = x1 - 1,j = y1 + 1;i != x2 && j != y2;i--,j++){
-            qDebug() << "33";
             for(int p = 0;p < 24;p++){
                if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() != hakarak_type){
-                   QMessageBox::warning(this,tr("STOP"),tr("չես կարա14!"));
                    sxmaci_type = hakarak_type;
-                   break;
+                   return;
                }else if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() == hakarak_type){
                    qanak++;
                    p1 = p;
+                }
             }
         }
         if(qanak == 0){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
                 qarer[a].set_x(x2);
                 qarer[a].set_y(y2);
                 Dashter[x1][y1] = false;
                 Dashter[x2][y2] = true;
                 Stugum(hakarak_type);
                 //QSound::play("C:\Users\Ashot\Desktop\prof_shashki\qayl1.wav");
-        }else if(qanak > 1){
-            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
-            sxmaci_type = hakarak_type;
-        }else{
+        }else if(qanak==1){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
             Dashter[x1][y1] = false;
             Dashter[x2][y2] = true;
             qarer[p1].set_type(Kerac);
@@ -682,40 +735,63 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             ptiutes = false;
             m_ptixaxas = false;
             if(Damkaov_utel(qarer[a])){
+                if(sxmaci_type == Yellow){
+                    zangvac2[qayleriqanak2] = " ";
+                    qayleriqanak2++;
+                }else {
+                    zangvac[qayleriqanak] = " ";
+                    qayleriqanak++;
+                }
                 ptiutes = true;
                 m_ptixaxas = true;
                 ptixaxas = qarer[a];
                 sxmaci_type = hakarak_type;
             }
             //QSound::play("C:\\Users\\ashot\\Documents\\Projects\\My projects\\shashki\\qayl1.wav");
-         }
-      }
+         }else{
+            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
+            sxmaci_type = hakarak_type;
+        }
+
     }else if(x1 - x2 == y2 - y1 && x1 - x2 < 0){
-        qDebug() << "4";
         qanak = 0;
         for(int i = x1 + 1,j = y1 - 1;i != x2 && j != y2;i++,j--){
-            qDebug() << "44";
             for(int p = 0;p < 24;p++){
                if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() != hakarak_type){
-                   QMessageBox::warning(this,tr("STOP"),tr("չես կարա14!"));
                    sxmaci_type = hakarak_type;
-                   break;
+                   return;
                }else if(qarer[p].get_x() == i && qarer[p].get_y() == j && qarer[p].get_type() == hakarak_type){
                    qanak++;
                    p1 = p;
+                }
             }
         }
         if(qanak == 0){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
                 qarer[a].set_x(x2);
                 qarer[a].set_y(y2);
                 Dashter[x1][y1] = false;
                 Dashter[x2][y2] = true;
                 Stugum(hakarak_type);
                 //QSound::play("C:\Users\Ashot\Desktop\prof_shashki\qayl1.wav");
-        }else if(qanak > 1){
-            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
-            sxmaci_type = hakarak_type;
-        }else{
+        }else if(qanak == 1){
+            if(sxmaci_type == Yellow){
+                zangvac[qayleriqanak] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak++;
+            }else{
+                zangvac2[qayleriqanak2] = tarer[x1 - 2] + QString::number(10 - y1) + "  - " +
+                                    tarer[x2-2] + QString::number(10 - y2);
+                qayleriqanak2++;
+            }
             Dashter[x1][y1] = false;
             Dashter[x2][y2] = true;
             qarer[p1].set_type(Kerac);
@@ -727,54 +803,68 @@ void Widget::Damkaov_qayl(int x1, int y1,int x2, int y2){
             ptiutes = false;
             m_ptixaxas = false;
             if(Damkaov_utel(qarer[a])){
+                if(sxmaci_type == Yellow){
+                    zangvac2[qayleriqanak2] = " ";
+                    qayleriqanak2++;
+                }else {
+                    zangvac[qayleriqanak] = " ";
+                    qayleriqanak++;
+                }
                 ptiutes = true;
                 m_ptixaxas = true;
                 ptixaxas = qarer[a];
                 sxmaci_type = hakarak_type;
             }
             //QSound::play("C:\\Users\\ashot\\Documents\\Projects\\My projects\\shashki\\qayl1.wav");
-         }
+         }else{
+            QMessageBox::warning(this,tr("STOP"),tr("չես կարա16!"));
+            sxmaci_type = hakarak_type;
+        }
       }
-    }
 }
 bool Widget::Damkaov_utel(coins temp){
+
     if(temp.get_damka() == false)return false;
+
     for(int c = temp.get_x() - 1,b = temp.get_y() - 1;c - 1 > 2 && b - 1 > 2;c--,b--){
-        if(Dashter[c - 1][b - 1] == true){
-            break;
-        }
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c - 1][b - 1] == false && qarer[i].get_type() != temp.get_type()){
+                if(Dashter[c - 1][b - 1] == true){
+                    break;
+                }
                 return true;
             }
         }
     }
     for(int c = temp.get_x() + 1,b = temp.get_y() - 1;c + 1 < 9 && b - 1 > 2;c++,b--){
-        if(Dashter[c + 1][b - 1] == true){
-            break;
-        }
+
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c + 1][b - 1] == false && qarer[i].get_type() != temp.get_type()){
+                if(Dashter[c + 1][b - 1] == true){
+                    break;
+                }
                 return true;
             }
         }
     }
     for(int c = temp.get_x() - 1,b = temp.get_y() + 1;c - 1 > 2 && b + 1 < 9;c--,b++){
-        if(Dashter[c - 1][b + 1] == true){
-            break;
-        }
+
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c - 1][b + 1] == false && qarer[i].get_type() != temp.get_type()){
+                if(Dashter[c - 1][b + 1] == true){
+                    break;
+                }
                 return true;
             }
         }
     }
     for(int c = temp.get_x() + 1,b = temp.get_y() + 1;c + 1 < 9 && b + 1 < 9;c++,b++){
-        if(Dashter[c + 1][b + 1] == true){
-            break;
-        }
+
         for(int i = 0;i < 24;i++){
             if(qarer[i].get_x() == c && qarer[i].get_y() == b && Dashter[c + 1][b + 1] == false && qarer[i].get_type() != temp.get_type()){
+                if(Dashter[c + 1][b + 1] == true){
+                    break;
+                }
                 return true;
             }
         }
